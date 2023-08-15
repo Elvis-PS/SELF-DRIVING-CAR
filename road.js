@@ -21,7 +21,7 @@
     draw(ctx){
         // draw line on the side of the road
         ctx.lineWidth = 5;
-        ctx.strokeStyle = "blue"; 
+        ctx.strokeStyle = "white"; 
 
         for(let i = 0; i <= this.laneCount; i++){
             const line = lerp(this.left, this.right, i/this.laneCount);  
