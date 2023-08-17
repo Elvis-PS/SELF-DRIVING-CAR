@@ -6,9 +6,22 @@ class Sensor{
         this.raySpread = Math.PI/2;
 
         this.rays = [];
+        this.readings = [];
     }
 
-    update(){
+    update(roadBorders){
+       this.#castRays();
+       this.readings = [];
+       for(let i = 0; i<this.rays.length; i++){
+        this.readings.push(this.#getReadings(this.rays[i], roadBorders));
+       }
+    }
+
+    #getReading(ray, roadBoarders){
+         
+    }
+
+    #castRays(){
         this.rays=[];
         for(let i = 0; i<this.rayCount; i++){
             const rayAngle = lerp(this.raySpread/2,-this.raySpread/2, 
