@@ -17,8 +17,24 @@ class Sensor{
        }
     }
 
-    #getReading(ray, roadBoarders){
-         
+    #getReadings(ray, roadBorders){
+         let touches = [];
+         for(let i=0; i<roadBorders.length; i++){
+            //getIntersection is a util method that returns an intersction object.
+            const touch = getIntersection(ray[0], ray[1],roadBorders[i][0], roadBorders[i][1]);
+            if(touch){
+                 touches.push(touch);
+            } 
+         }
+         if(touches.length===0){
+            return null;  
+         }else{
+            const offsets = touches.map(e=>e.offset);
+            const minOffset = Math.min(...offsets);
+
+            const closestTouch = touches.find(e=>e.offset==minOffset);
+            return closestTouch;
+         }
     }
 
     #castRays(){
@@ -35,13 +51,27 @@ class Sensor{
         }
     }
     draw(ctx){
+        let i = 0;
         this.rays.forEach((ray)=>{
+            let end = ray[1];
+            if(this.readings[i]){
+                end = this.readings[i];
+            }
+            ctx.lineWidth = 2;
+            
             ctx.beginPath();
-            ctx.lineWidth = 1;
             ctx.strokeStyle = "yellow";
             ctx.moveTo(ray[0].x, ray[0].y);
-            ctx.lineTo(ray[1].x, ray[1].y);
+            ctx.lineTo(end.x, end.y);
             ctx.stroke();
-        })
+
+            ctx.beginPath();
+            ctx.strokeStyle = "black";
+            ctx.moveTo(ray[1].x, ray[1].y);
+            ctx.lineTo(end.x, end.y);
+            ctx.stroke();
+
+            i++;
+        });
     }
 }
