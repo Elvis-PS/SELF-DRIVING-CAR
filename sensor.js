@@ -1,8 +1,8 @@
 class Sensor{
     constructor(car){
         this.car = car;
-        this.rayCount=30;
-        this.rayLength=300;
+        this.rayCount=5;
+        this.rayLength=400;
         this.raySpread = Math.PI/2;
 
         this.rays = [];
@@ -60,6 +60,7 @@ class Sensor{
             ctx.lineWidth = 2;
             
             ctx.beginPath();
+            ctx.setLineDash([10, 10])
             ctx.strokeStyle = "yellow";
             ctx.moveTo(ray[0].x, ray[0].y);
             ctx.lineTo(end.x, end.y);
