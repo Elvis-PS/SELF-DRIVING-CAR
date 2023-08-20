@@ -4,6 +4,7 @@ class Sensor{
         this.rayCount=29;
         this.rayLength=200;
         this.raySpread = 2*Math.PI;
+        this.rayTimer = 0;
 
         this.rays = [];
         this.readings = [];
@@ -62,7 +63,8 @@ class Sensor{
         }
     }
     draw(ctx){
-        let i = 0;
+        let i = 0;     
+        this.rayTimer++;   
         this.rays.forEach((ray)=>{
             let end = ray[1];
             if(this.readings[i]){
@@ -71,14 +73,23 @@ class Sensor{
             ctx.lineWidth = 0.5;
             
             ctx.beginPath();
-            ctx.setLineDash([10, 10])
-            ctx.strokeStyle = "white";
+            console.log(this.rayTimer);
+            
+            if(this.rayTimer>30 && this.rayTimer<=60){
+                ctx.setLineDash([5, 5])
+            }
+            else if(this.rayTimer>60){
+                ctx.setLineDash([]); 
+                this.rayTimer = 0;
+            }
+
+            ctx.strokeStyle = "red";
             ctx.moveTo(ray[0].x, ray[0].y);
             ctx.lineTo(end.x, end.y);
             ctx.stroke();
 
 
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5;
 
             ctx.beginPath();
             ctx.strokeStyle = "yellow";
