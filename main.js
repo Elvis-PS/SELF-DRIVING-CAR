@@ -20,8 +20,8 @@ function animate(){
     ctx.translate(0, -car.y+canvas.height*0.7);
 
     road.draw(ctx);
-    car.draw(ctx);
     traffic.forEach(vehicle=>vehicle.draw(ctx));
+    car.draw(ctx);
     
     ctx.restore();
     requestAnimationFrame(animate);

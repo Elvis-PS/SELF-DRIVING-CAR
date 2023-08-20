@@ -1,30 +1,41 @@
 class Sensor{
     constructor(car){
         this.car = car;
-        this.rayCount=5;
-        this.rayLength=400;
-        this.raySpread = Math.PI/2;
+        this.rayCount=29;
+        this.rayLength=200;
+        this.raySpread = 2*Math.PI;
 
         this.rays = [];
         this.readings = [];
     }
 
-    update(roadBorders){
+    update(roadBorders, traffic){
        this.#castRays();
        this.readings = [];
        for(let i = 0; i<this.rays.length; i++){
-        this.readings.push(this.#getReadings(this.rays[i], roadBorders));
+        this.readings.push(this.#getReadings(this.rays[i], roadBorders, traffic));
        }
     }
 
-    #getReadings(ray, roadBorders){
+    #getReadings(ray, roadBorders, traffic){
          let touches = [];
          for(let i=0; i<roadBorders.length; i++){
             //getIntersection is a util method that returns an intersction object.
-            const touch = getIntersection(ray[0], ray[1],roadBorders[i][0], roadBorders[i][1]);
-            if(touch){
-                 touches.push(touch);
+            const seeShouder = getIntersection(ray[0], ray[1],roadBorders[i][0], roadBorders[i][1]);
+            if(seeShouder){
+                 touches.push(seeShouder);
             } 
+         }
+         for(let i = 0; i<traffic.length; i++){
+                const poly = traffic[i].polygon;
+            for(let j=0; j<poly.length; j++){
+                const seeCars = getIntersection(
+                ray[0], ray[1], poly[j], poly[(j+1)%poly.length]);
+                if(seeCars){
+                    touches.push(seeCars);
+                    console.log(seeCars);
+                }
+            }
          }
          if(touches.length===0){
             return null;  
@@ -57,17 +68,20 @@ class Sensor{
             if(this.readings[i]){
                 end = this.readings[i];
             }
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 0.5;
             
             ctx.beginPath();
             ctx.setLineDash([10, 10])
-            ctx.strokeStyle = "yellow";
+            ctx.strokeStyle = "white";
             ctx.moveTo(ray[0].x, ray[0].y);
             ctx.lineTo(end.x, end.y);
             ctx.stroke();
 
+
+            ctx.lineWidth = 2;
+
             ctx.beginPath();
-            ctx.strokeStyle = "black";
+            ctx.strokeStyle = "yellow";
             ctx.moveTo(ray[1].x, ray[1].y);
             ctx.lineTo(end.x, end.y);
             ctx.stroke();

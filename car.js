@@ -111,7 +111,7 @@ class Car{
         ctx.save();
 
         !this.driver?ctx.fillStyle="green":
-        this.damaged?ctx.fillStyle='red':ctx.fillStyle="blue";
+        this.damaged?ctx.fillStyle='red':ctx.fillStyle="rgba(0, 100, 150)";
 
 
         ctx.beginPath();
