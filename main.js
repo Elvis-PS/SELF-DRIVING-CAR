@@ -3,15 +3,17 @@ canvas.width= 240 ;
 
 const ctx = canvas.getContext("2d");
 const road = new Road(canvas.width/2, canvas.width*0.8);
-const car = new Car(road.getLaneCenter(1), 400, 30, 50);
-const traffic = [];
-traffic.push(new Car(road.getLaneCenter(1), 100, 30, 50));
+// car.controls.addKeyboardListeners();
+const traffic = [new Car(road.getLaneCenter(1), 100, 30, 50, false, 2)];
+const car = new Car(road.getLaneCenter(1), 400, 30, 50, true, 4);
 
 animate();
 
 function animate(){
-    car.update(road.borders);
-    traffic.forEach(vehicle=>vehicle.update(road.borders));
+    traffic.forEach(vehicle=>{
+        vehicle.update(road.borders,null);
+    });
+    car.update(road.borders, traffic);
     canvas.height = window.innerHeight;
 
     ctx.save();

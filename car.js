@@ -1,36 +1,48 @@
 class Car{
-    constructor (x, y, width, height){
+    constructor (x, y, width, height, driver, maxSpeed){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.driver = driver;
 
         this.speed = 0;
         this.acceleration = 0.2;
-        this.maxSpeed = 3;
+        this.maxSpeed = maxSpeed;
         this.friction = 0.05;
         this.angle = 0;
         this.damaged = false;
+        this.polygon = null;
         
-        this.sensor = new Sensor(this); 
-        this.controls = new Controls();
+        this.driver?this.sensor = new Sensor(this):null;
+        this.controls = new Controls(this.driver);
     }
 
-    update(roadBorders){
-        if(!this.damaged){            
+    update(roadBorders, traffic){
+        if(!this.damaged){      
             this.#move();     
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders);
+            this.damaged = this.#assessDamage(roadBorders, traffic);
         }
-        this.sensor.update(roadBorders);   
+        this.sensor?this.sensor.update(roadBorders, traffic):null; 
     }
 
-    #assessDamage(roadBorders){
+    #assessDamage(roadBorders, vehicles){
+        if(vehicles)
         for(let i = 0; i<roadBorders.length; i++){
             if(polyIntersect(this.polygon, roadBorders[i])){
                 return true;
             }
         }
+        
+        if(this.driver){
+            for(let i = 0; i<vehicles.length; i++){
+                if(polyIntersect(this.polygon, vehicles[i].polygon)){
+                    return true;
+                    }
+                }
+
+            }
         return false;
     }
 
@@ -98,10 +110,8 @@ class Car{
     draw(ctx){
         ctx.save();
 
-        
-        if(this.damaged){
-            ctx.fillStyle="red";
-        }else ctx.fillStyle = "blue";
+        !this.driver?ctx.fillStyle="green":
+        this.damaged?ctx.fillStyle='red':ctx.fillStyle="blue";
 
 
         ctx.beginPath();
@@ -114,6 +124,6 @@ class Car{
 
         ctx.restore();
 
-        this.sensor.draw(ctx);
+        this.sensor?this.sensor.draw(ctx):null;
     }
 }

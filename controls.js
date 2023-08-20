@@ -1,13 +1,15 @@
 class Controls {
-    constructor(){
+    constructor(driver){
         this.forward = false;
         this.left = false;
         this.right = false;
         this.reverse = false; 
-        this.#addKeyboardListeners();
+        this.driver = driver;
+        this.driver?this.addKeyboardListeners():this.forward=true;
+        console.log(driver);
     }
 
-    #addKeyboardListeners(){
+    addKeyboardListeners(){
         document.onkeydown=(event)=>{
             switch(event.key){
                 case "ArrowLeft":
